@@ -20,7 +20,7 @@ NTSTATUS BBSafeAllocateString( OUT PUNICODE_STRING result, IN USHORT size )
     if (result == NULL || size == 0)
         return STATUS_INVALID_PARAMETER;
 
-    result->Buffer = ExAllocatePoolWithTag( PagedPool, size, BB_POOL_TAG );
+    result->Buffer = ExAllocatePoolZero( PagedPool, size, BB_POOL_TAG );
     result->Length = 0;
     result->MaximumLength = size;
 
@@ -52,7 +52,7 @@ NTSTATUS BBSafeInitString( OUT PUNICODE_STRING result, IN PUNICODE_STRING source
         return STATUS_SUCCESS;
     }
 
-    result->Buffer = ExAllocatePoolWithTag( PagedPool, source->MaximumLength, BB_POOL_TAG );
+    result->Buffer = ExAllocatePoolZero( PagedPool, source->MaximumLength, BB_POOL_TAG );
     result->Length = source->Length;
     result->MaximumLength = source->MaximumLength;
 
@@ -267,7 +267,7 @@ ULONG GenCall32V( IN PUCHAR pBuf, IN PVOID pFn, IN INT argc, IN va_list vl )
 {
     ULONG ofst = 0;
 
-    PULONG pArgBuf = ExAllocatePoolWithTag( PagedPool, argc * sizeof( ULONG ), BB_POOL_TAG );
+    PULONG pArgBuf = ExAllocatePoolZero( PagedPool, argc * sizeof( ULONG ), BB_POOL_TAG );
 
     // cast args
     for (INT i = 0; i < argc; i++)

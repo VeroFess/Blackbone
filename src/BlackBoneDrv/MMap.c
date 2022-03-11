@@ -403,7 +403,7 @@ NTSTATUS BBFindOrMapModule(
     UNREFERENCED_PARAMETER( size );
 
     // Allocate image context record
-    pLocalImage = ExAllocatePoolWithTag( PagedPool, sizeof( MODULE_DATA ), BB_POOL_TAG );
+    pLocalImage = ExAllocatePoolZero( PagedPool, sizeof( MODULE_DATA ), BB_POOL_TAG );
     RtlZeroMemory( pLocalImage, sizeof( MODULE_DATA ) );
 
     BBSafeInitString( &pLocalImage->fullPath, path );
@@ -1585,7 +1585,7 @@ NTSTATUS BBLoadLocalImage( IN PUNICODE_STRING path, OUT PVOID* pBase )
     // Allocate memory for file contents
     status = ZwQueryInformationFile( hFile, &statusBlock, &fileInfo, sizeof( fileInfo ), FileStandardInformation );
     if (NT_SUCCESS( status ))
-        *pBase = ExAllocatePoolWithTag( PagedPool, fileInfo.EndOfFile.QuadPart, BB_POOL_TAG );
+        *pBase = ExAllocatePoolZero( PagedPool, fileInfo.EndOfFile.QuadPart, BB_POOL_TAG );
     else
         DPRINT( "BlackBone: %s: Failed to get '%wZ' size. Status: 0x%X\n", __FUNCTION__, path, status );
 

@@ -478,7 +478,7 @@ NTSTATUS BBLookupProcessThread( IN PEPROCESS pProcess, OUT PETHREAD* ppThread )
 {
     NTSTATUS status = STATUS_SUCCESS;
     HANDLE pid = PsGetProcessId( pProcess );
-    PVOID pBuf = ExAllocatePoolWithTag( NonPagedPool, 1024 * 1024, BB_POOL_TAG );
+    PVOID pBuf = ExAllocatePoolZero( NonPagedPool, 1024 * 1024, BB_POOL_TAG );
     PSYSTEM_PROCESS_INFO pInfo = (PSYSTEM_PROCESS_INFO)pBuf;
 
     ASSERT( ppThread != NULL );
@@ -650,7 +650,7 @@ NTSTATUS BBQueueUserApc(
 
     // Allocate APC
     PKAPC pPrepareApc = NULL;
-    PKAPC pInjectApc = ExAllocatePoolWithTag( NonPagedPool, sizeof( KAPC ), BB_POOL_TAG );
+    PKAPC pInjectApc = ExAllocatePoolZero( NonPagedPool, sizeof( KAPC ), BB_POOL_TAG );
 
     if (pInjectApc == NULL)
     {
@@ -668,7 +668,7 @@ NTSTATUS BBQueueUserApc(
     // Setup force-delivery APC
     if (bForce)
     {
-        pPrepareApc = ExAllocatePoolWithTag( NonPagedPool, sizeof( KAPC ), BB_POOL_TAG );
+        pPrepareApc = ExAllocatePoolZero( NonPagedPool, sizeof( KAPC ), BB_POOL_TAG );
         KeInitializeApc(
             pPrepareApc, (PKTHREAD)pThread,
             OriginalApcEnvironment, &KernelApcPrepareCallback,
@@ -781,7 +781,7 @@ NTSTATUS BBMapWorker( IN PVOID pArg )
     // Allocate memory for file contents
     status = ZwQueryInformationFile( hFile, &statusBlock, &fileInfo, sizeof( fileInfo ), FileStandardInformation );
     if (NT_SUCCESS( status ))
-        fileData = ExAllocatePoolWithTag( PagedPool, fileInfo.EndOfFile.QuadPart, BB_POOL_TAG );
+        fileData = ExAllocatePoolZero( PagedPool, fileInfo.EndOfFile.QuadPart, BB_POOL_TAG );
     else
         DPRINT( "BlackBone: %s: Failed to get '%wZ' size. Status: 0x%X\n", __FUNCTION__, pPath, status );
 

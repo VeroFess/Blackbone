@@ -242,7 +242,7 @@ NTSTATUS BBDispatch( IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp )
                         if (inputBufferLength >= sizeof( ENUM_REGIONS ) && outputBufferLength >= sizeof( ENUM_REGIONS_RESULT ) && ioBuffer)
                         {
                             ULONG count = (outputBufferLength - sizeof( ULONGLONG )) / sizeof( MEMORY_BASIC_INFORMATION );
-                            PENUM_REGIONS_RESULT pResult = ExAllocatePoolWithTag( PagedPool, outputBufferLength, BB_POOL_TAG );
+                            PENUM_REGIONS_RESULT pResult = ExAllocatePoolZero( PagedPool, outputBufferLength, BB_POOL_TAG );
                             pResult->count = count;
 
                             Irp->IoStatus.Status = BBEnumMemRegions( (PENUM_REGIONS)ioBuffer, pResult );

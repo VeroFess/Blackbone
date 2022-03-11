@@ -184,7 +184,7 @@ RTL_GENERIC_COMPARE_RESULTS AvlCompare( IN RTL_AVL_TABLE *Table, IN PVOID FirstS
 PVOID AvlAllocate( IN RTL_AVL_TABLE *Table, IN CLONG ByteSize )
 {
     UNREFERENCED_PARAMETER( Table );
-    return ExAllocatePoolWithTag( PagedPool, ByteSize, BB_POOL_TAG );
+    return ExAllocatePoolZero( PagedPool, ByteSize, BB_POOL_TAG );
 }
 
 /*
@@ -229,7 +229,7 @@ NTSTATUS BBBuildProcessRegionListForRange( IN PLIST_ENTRY pList, IN ULONG_PTR st
             if (mbi.Type != MEM_PRIVATE && !mapSections)
                 continue;
 
-            pEntry = ExAllocatePoolWithTag( PagedPool, sizeof( MAP_ENTRY ), BB_POOL_TAG );
+            pEntry = ExAllocatePoolZero( PagedPool, sizeof( MAP_ENTRY ), BB_POOL_TAG );
             if (pEntry == NULL)
             {
                 DPRINT( "BlackBone: %s: Failed to allocate memory for Remap descriptor\n", __FUNCTION__ );
@@ -628,7 +628,7 @@ NTSTATUS BBAllocateSharedPage( OUT PVOID* pPage, OUT PMDL* pResultMDL )
     if (pPage == NULL || pResultMDL == NULL)
         return STATUS_INVALID_PARAMETER;
 
-    *pPage = ExAllocatePoolWithTag( NonPagedPool, PAGE_SIZE, BB_POOL_TAG );
+    *pPage = ExAllocatePoolZero( NonPagedPool, PAGE_SIZE, BB_POOL_TAG );
     if (*pPage)
     {
         // Cleanup buffer before mapping it into UserMode to prevent exposure of kernel data

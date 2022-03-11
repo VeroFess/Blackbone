@@ -76,7 +76,7 @@ NTSTATUS BBInjectDll( IN PINJECT_DLL pData )
             __try
             {
                 ProbeForRead( (PVOID)pData->imageBase, pData->imageSize, 1 );
-                systemBuffer = ExAllocatePoolWithTag( PagedPool, pData->imageSize, BB_POOL_TAG );
+                systemBuffer = ExAllocatePoolZero( PagedPool, pData->imageSize, BB_POOL_TAG );
                 RtlCopyMemory( systemBuffer, (PVOID)pData->imageBase, pData->imageSize );
             }
             __except (EXCEPTION_EXECUTE_HANDLER)
